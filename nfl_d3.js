@@ -3,24 +3,22 @@ var margin = {top: 20, right: 25, bottom: 20, left: 50};
 var width = window.innerWidth - document.getElementById("viewDiv").offsetWidth - document.getElementById("optionsDiv").offsetWidth - margin.left - margin.right;
 var scatterplotHeight = 0.5*window.innerHeight - margin.top - margin.bottom;
 var graphHeight = 0.5*window.innerHeight - margin.top - margin.bottom;
-
 var graphVisible = false;
 
 // d3
-function plotStats(dataFile, limit) {
+function plotStats(dataFile, year) {
   d3.csv(dataFile, function(error, contents) {
     if (error) {
       console.log(error);
     } else {
-      console.log(contents);
       data = contents;
     }
     
-    buildScatterplot(limit);
+    buildScatterplot(year);
   });
 }
 
-function buildScatterplot(limit) {
+function buildScatterplot(year) {
   //data.indexOf(d)
   var xScale = d3.scale.linear();
   var xMin = d3.min(data, function(d) {
@@ -41,12 +39,20 @@ function buildScatterplot(limit) {
   yScale.domain([0,yMax]);
   yScale.range([scatterplotHeight, margin.bottom]);
   
-  var svg = d3.select("#display")
+  var filteredData;
+  if (year) {
+    filteredData = data.filter(function (stat) { return parseInt(stat["Year"]) == year; } );
+  } else {
+    filteredData = data;
+  }
+  console.log(filteredData);
+  
+  var svg = d3.select("#scatterplot").html("")
               .append("svg")
               .attr("width", width + margin.left + margin.right)
               .attr("height", scatterplotHeight + margin.top + margin.bottom);
   svg.selectAll("circle")
-      .data(data)
+      .data(filteredData)
       .enter()
       .append("circle")
       .attr("cx", function(d) {
@@ -105,10 +111,6 @@ function drawGraph() {
   
 }
 
-function addToGraph(id) {
-  
-}
-
-function removeGraph() {
+function addToGraph() {
   
 }
