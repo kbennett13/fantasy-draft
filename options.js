@@ -63,7 +63,7 @@ window.onload = function() {
     } else {
       if (value == positionOptions[1]) {
         dataFile = files[0];
-        plotStats(dataFile, undefined);
+        plotStats(dataFile, undefined, undefined);
       }
       var toShow = document.getElementsByClassName("post-position");
       for (el = 0; el < toShow.length; el++) {
@@ -81,8 +81,7 @@ window.onload = function() {
       }
     } else {
       var year = document.getElementById("yearSelect").value;
-      console.log(year);
-      buildScatterplot(year);
+      buildScatterplot(year,undefined);
       var toShow = document.getElementsByClassName("post-year");
       for (el = 0; el < toShow.length; el++) {
         toShow[el].style.display = "inline";
@@ -93,10 +92,10 @@ window.onload = function() {
   document.getElementById("numberSelect").onchange = function () {
     var value = document.getElementById("numberSelect").value;
     var year = document.getElementById("yearSelect").value;
-    if(value == 0) {
-      buildScatterplot(year);
+    if(value == numberOptions[0]) {
+      buildScatterplot(year,undefined);
     } else {
-      buildScatterplot(year);
+      buildScatterplot(year,value);
     }
   }
 }
