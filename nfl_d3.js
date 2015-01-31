@@ -1,4 +1,5 @@
 var data;
+var scatterplot;
 var margin = {top: 20, right: 25, bottom: 20, left: 50};
 var width = window.innerWidth - document.getElementById("viewDiv").offsetWidth - document.getElementById("optionsDiv").offsetWidth - margin.left - margin.right;
 var scatterplotHeight = 0.5*window.innerHeight - margin.top - margin.bottom;
@@ -30,8 +31,16 @@ function compareStats(a, b) {
   return 0;
 }
 
+function addScatterplot() {
+  scatterplot = d3.select("#scatterplot").html("")
+          .append("svg")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", scatterplotHeight + margin.top + margin.bottom);
+}
+
 function buildScatterplot(position,year,limit) {
-  //data.indexOf(d)
+  addScatterplot();
+
   var xScale = d3.scale.linear();
   var xMin = d3.min(data, function(d) {
               return parseInt(d["Attempts"]);  //References first value in each subarray
@@ -58,16 +67,9 @@ function buildScatterplot(position,year,limit) {
       sortedData = filteredData.sort(compareStats);
       filteredData = sortedData.slice(0,limit);
     }
-  } else {
-    filteredData = data;
   }
-  console.log(filteredData);
   
-  var svg = d3.select("#scatterplot").html("")
-              .append("svg")
-              .attr("width", width + margin.left + margin.right)
-              .attr("height", scatterplotHeight + margin.top + margin.bottom);
-  svg.selectAll("circle")
+  scatterplot.selectAll("circle")
       .data(filteredData)
       .enter()
       .append("circle")
@@ -84,7 +86,7 @@ function buildScatterplot(position,year,limit) {
       .on("mouseenter", function(d) {
         var xPosition = parseFloat(d3.select(this).attr("cx")) + parseInt(d3.select(this).attr("r")) + 1;
         var yPosition = parseFloat(d3.select(this).attr("cy")) - parseInt(d3.select(this).attr("r")) - 1;
-          svg.append("text")
+          scatterplot.append("text")
           .attr("id", "tooltip")
           .attr("x", xPosition)
           .attr("y", yPosition)
@@ -108,25 +110,35 @@ function buildScatterplot(position,year,limit) {
       });
   
   var xAxis = d3.svg.axis()
-  .scale(xScale)
-  .orient("bottom");
-  svg.append("g")
-  .attr("class", "axis")
-  .attr("transform", "translate(0," + scatterplotHeight + ")")
-  .call(xAxis);
+                .scale(xScale)
+                .orient("bottom");
+  scatterplot.append("g")
+              .attr("class", "axis")
+              .attr("transform", "translate(0," + scatterplotHeight + ")")
+              .call(xAxis);
+  scatterplot.append("text")
+              .attr("x", width/2)
+              .attr("y", scatterplotHeight + margin.top + margin.bottom/2)
+              .text("Attempts");
+  
   var yAxis = d3.svg.axis()
-  .scale(yScale)
-  .orient("left");
-  svg.append("g")
-  .attr("class", "axis")
-  .attr("transform", "translate(" + margin.left + ", 0)")
-  .call(yAxis);
+                .scale(yScale)
+                .orient("left");
+  scatterplot.append("g")
+              .attr("class", "axis")
+              .attr("transform", "translate(" + margin.left + ", 0)")
+              .call(yAxis);
+  scatterplot.append("text")
+              .attr("x", -scatterplotHeight/2-margin.top-margin.bottom)
+              .attr("y", (1/4)*margin.left)
+              .attr("transform", "rotate(-90)")
+              .text("Completions");
 }
 
 function drawGraph() {
   
 }
 
-function addToGraph() {
-  
+function addToGraph(id) {
+  console.log(id);
 }

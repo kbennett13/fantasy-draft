@@ -4,7 +4,7 @@ var numberOptions = ["Select Limit",5,10,25,50];
 var yearMin = 2002;
 var yearMax = 2014;
 var yearOptions = [];
-var files = ["data/passingData.csv"];
+var files = ["data/passingData.csv","data/rushingData.csv"];
 var dataFile;
 
 // build select for view and position options
