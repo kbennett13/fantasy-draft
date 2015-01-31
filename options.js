@@ -14,7 +14,7 @@ function buildOptions(name, optionList) {
   results += "<select class=\"form-control\" id=\"" + name + "\">";
   
   for (option in optionList) {
-    results += "<option value=\"" + optionList[option] + "\">" + optionList[option] + "</option>";
+    results += "<option value=" + optionList[option] + ">" + optionList[option] + "</option>";
   }
   
   results += "</select>"
@@ -63,7 +63,7 @@ window.onload = function() {
     } else {
       if (value == positionOptions[1]) {
         dataFile = files[0];
-        plotStats(dataFile, undefined, undefined);
+        plotStats(dataFile, value, undefined, undefined);
       }
       var toShow = document.getElementsByClassName("post-position");
       for (el = 0; el < toShow.length; el++) {
@@ -73,15 +73,16 @@ window.onload = function() {
   }
   
   document.getElementById("yearSelect").onchange = function () {
+    var position = document.getElementById("positionSelect").value;
     if(document.getElementById("yearSelect").value == yearOptions[0]) {
-      buildScatterplot(undefined);
+      buildScatterplot(position,undefined,undefined);
       var toHide = document.getElementsByClassName("post-year");
       for (el = 0; el < toHide.length; el++) {
         toHide[el].style.display = "none";
       }
     } else {
       var year = document.getElementById("yearSelect").value;
-      buildScatterplot(year,undefined);
+      buildScatterplot(position,year,undefined);
       var toShow = document.getElementsByClassName("post-year");
       for (el = 0; el < toShow.length; el++) {
         toShow[el].style.display = "inline";
@@ -90,12 +91,13 @@ window.onload = function() {
   }
   
   document.getElementById("numberSelect").onchange = function () {
+    var position = document.getElementById("positionSelect").value;
     var value = document.getElementById("numberSelect").value;
     var year = document.getElementById("yearSelect").value;
     if(value == numberOptions[0]) {
-      buildScatterplot(year,undefined);
+      buildScatterplot(position,year,undefined);
     } else {
-      buildScatterplot(year,value);
+      buildScatterplot(position,year,value);
     }
   }
 }

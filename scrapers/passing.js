@@ -114,8 +114,8 @@ function passingYards(year, startNum, numYearResults)
         page = newEven[i]['children'][name]['children'][0]['attribs']['href'];
         line += "," + /[0-9]+/.exec(page); // id
         line += "," + newEven[i]['children'][name]['children'][0]['children'][0]['data']; // name
-        if (newOdd[i]['children'][name]['children'][0]['next']['data']) {
-          position = newOdd[i]['children'][name]['children'][0]['next']['data']; // position
+        if (newEven[i]['children'][name]['children'][0]['next']['data']) {
+          position = newEven[i]['children'][name]['children'][0]['next']['data']; // position
           line += "," + /[A-Z]+/.exec(position);
         } else {
           line += ",";

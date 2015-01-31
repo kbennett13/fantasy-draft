@@ -6,7 +6,7 @@ var graphHeight = 0.5*window.innerHeight - margin.top - margin.bottom;
 var graphVisible = false;
 
 // d3
-function plotStats(dataFile, year, limit) {
+function plotStats(dataFile, position, year, limit) {
   d3.csv(dataFile, function(error, contents) {
     if (error) {
       console.log(error);
@@ -14,7 +14,7 @@ function plotStats(dataFile, year, limit) {
       data = contents;
     }
     
-    buildScatterplot(year,limit);
+    buildScatterplot(position,year,limit);
   });
 }
 
@@ -30,7 +30,7 @@ function compareStats(a, b) {
   return 0;
 }
 
-function buildScatterplot(year,limit) {
+function buildScatterplot(position,year,limit) {
   //data.indexOf(d)
   var xScale = d3.scale.linear();
   var xMin = d3.min(data, function(d) {
@@ -51,9 +51,9 @@ function buildScatterplot(year,limit) {
   yScale.domain([0,yMax]);
   yScale.range([scatterplotHeight, margin.bottom]);
   
-  var filteredData;
+  var filteredData = data.filter(function (stat) { return stat["Position"] == position; } );
   if (year) {
-    filteredData = data.filter(function (stat) { return parseInt(stat["Year"]) == year; } );
+    filteredData = filteredData.filter(function (stat) { return parseInt(stat["Year"]) == year; } );
     if (limit) {
       sortedData = filteredData.sort(compareStats);
       filteredData = sortedData.slice(0,limit);
