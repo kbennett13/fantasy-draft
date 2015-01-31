@@ -1,8 +1,10 @@
 var viewOptions = ["Select View", "Compare Players", "Compare Players By Position"];
 var positionOptions = ["Select Position","QB", "WR", "RB", "TE", "WR/RB/TE", "K", "DEF"];
 var numberOptions = ["Select Limit",5,10,25,50];
+var toIgnore = ["Year","Rank","Id","Name","Position","Team"];
+var axisOptions;
 var yearOptions = [];
-var files = ["data/passingData.csv","data/rushingData.csv"];
+var files = ["data/passingData.csv","data/receivingData.csv","data/rushingData.csv"];
 var dataFile;
 
 // build select for view and position options
@@ -24,6 +26,26 @@ function generateYears() {
   yearOptions.push("Select Year");
   for (y = yearMin; y <= yearMax; y++) {
     yearOptions.push(y);
+  }
+}
+
+function getFirstLine() {
+  var txtFile = new XMLHttpRequest();
+  txtFile.open("GET", dataFile, false);
+  txtFile.send();
+
+  lines = txtFile.responseText.split("\n");
+  return lines[0].split(",");
+}
+
+function generateAxisOptions() {
+  axisOptions = [];
+  axisOptions.push("Select Measure");
+  measures = getFirstLine();
+  for (i = 0; i < measures.length; i++) {
+    if (toIgnore.indexOf(measures[i]) == -1) {
+      axisOptions.push(measures[i]);
+    }
   }
 }
 
@@ -52,16 +74,51 @@ window.onload = function() {
   }
   
   document.getElementById("positionSelect").onchange = function () {
-    value = document.getElementById("positionSelect").value;
-    if(value == positionOptions[0]) {
+    var position = document.getElementById("positionSelect").value;
+    if(position == positionOptions[0]) {
       var toHide = document.getElementsByClassName("post-position");
       for (el = 0; el < toHide.length; el++) {
         toHide[el].style.display = "none";
       }
     } else {
-      if (value == positionOptions[1]) {
-        dataFile = files[0];
-        plotStats(dataFile, value, undefined, undefined);
+      for (i = 0; i < positionOptions.length; i++) {
+        if (position == positionOptions[i]) {
+          dataFile = files[i-1];
+          generateAxisOptions();
+          document.getElementById("scatterplotX").innerHTML = buildOptions("scatterplotXSelect", axisOptions);
+          document.getElementById("scatterplotY").innerHTML = buildOptions("scatterplotYSelect", axisOptions);
+          document.getElementById("scatterplotXSelect").onchange = function () {
+            var xAxis = document.getElementById("scatterplotXSelect").value;
+            if(xAxis == positionOptions[0]) {
+              var toHide = document.getElementsByClassName("post-axes");
+              for (el = 0; el < toHide.length; el++) {
+                toHide[el].style.display = "none";
+              }
+            } else {
+              plotStats(dataFile, position, undefined, undefined);
+              var toShow = document.getElementsByClassName("post-axes");
+              for (el = 0; el < toShow.length; el++) {
+                toShow[el].style.display = "inline";
+              }
+            }
+          }
+          
+          document.getElementById("scatterplotYSelect").onchange = function () {
+            var yAxis = document.getElementById("scatterplotYSelect").value;
+            if(yAxis == positionOptions[0]) {
+              var toHide = document.getElementsByClassName("post-axes");
+              for (el = 0; el < toHide.length; el++) {
+                toHide[el].style.display = "none";
+              }
+            } else {
+              plotStats(dataFile, position, undefined, undefined);
+              var toShow = document.getElementsByClassName("post-axes");
+              for (el = 0; el < toShow.length; el++) {
+                toShow[el].style.display = "inline";
+              }
+            }
+          }
+        }
       }
       var toShow = document.getElementsByClassName("post-position");
       for (el = 0; el < toShow.length; el++) {
@@ -90,12 +147,12 @@ window.onload = function() {
   
   document.getElementById("numberSelect").onchange = function () {
     var position = document.getElementById("positionSelect").value;
-    var value = document.getElementById("numberSelect").value;
+    var limit = document.getElementById("numberSelect").value;
     var year = document.getElementById("yearSelect").value;
     if(value == numberOptions[0]) {
       buildScatterplot(position,year,undefined);
     } else {
-      buildScatterplot(position,year,value);
+      buildScatterplot(position,year,limit);
     }
   }
 }

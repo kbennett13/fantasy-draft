@@ -164,9 +164,9 @@ function addToGraph(id) {
   
   var drawingSpace;
   if (!graphVisible) {
-    drawingSpace = graph.selectAll("circle");
+    drawingSpace = graph.append("g").selectAll("circle");
   } else {
-    drawingSpace = graph.selectAll("empty");
+    drawingSpace = graph.append("g").selectAll("empty");
   }
         drawingSpace.data(playerData).enter()
         .append("circle")
@@ -192,7 +192,7 @@ function addToGraph(id) {
           .attr("font-size", "12px")
           .attr("font-weight", "bold")
           .attr("fill", "black")
-          .text(d["Completions"]);
+          .text(d["Name"] + ": " + d["Completions"]);
       })
       .on("mouseleave", function(d) {
         d3.select("#tooltip").remove();
@@ -226,6 +226,10 @@ function addToGraph(id) {
                 .text("Completions");
     graphVisible = true;
   }
+  
+  // add lines
+  var points = drawingSpace.selectAll("circle");
+  console.log(points.length);
 }
 
 function removeFromGraph() {

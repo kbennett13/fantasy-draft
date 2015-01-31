@@ -10,6 +10,10 @@ span {
   display: none;
 }
 
+.post-axes {
+  display: none;
+}
+
 .post-year {
   display: none;
 }
@@ -24,4 +28,8 @@ span {
 .axis text {
   font-family: sans-serif;
   font-size: 11px;
+}
+
+circle {
+  cursor: pointer;
 }
