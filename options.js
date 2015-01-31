@@ -1,8 +1,6 @@
 var viewOptions = ["Select View", "Compare Players", "Compare Players By Position"];
 var positionOptions = ["Select Position","QB", "WR", "RB", "TE", "WR/RB/TE", "K", "DEF"];
 var numberOptions = ["Select Limit",5,10,25,50];
-var yearMin = 2002;
-var yearMax = 2014;
 var yearOptions = [];
 var files = ["data/passingData.csv","data/rushingData.csv"];
 var dataFile;
